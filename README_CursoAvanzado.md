@@ -13,7 +13,6 @@ Para poder realizarlo, es necesario tener claro el curso anterior: **Clean Archi
 
 ---
 
-
 ## Agradecimientos 🎁
 
 * Plataforma de aprendizaje online [Udemy](https://www.udemy.com/share/109PRS3@gz4ZDXhSu8i9pa_CnjiahHDgwCptf9vw-CYR0FqedgI2UGsgwy4nmPTe3ehw5QaGMA==/)
@@ -135,4 +134,23 @@ A su vez, usa las clases:
 ![My Image](./docs/imgs/10.Authorization1.JPG)
 
 ## Clases abstractas y genéricas para authorization
-Lorem ipsum.
+
+Para gestionar los roles y permisos, se han creado las siguientes clases:
+
+**Clases genéricas:**
+- Clase `Enumeration`: clase abstracta que se encarga de gestionar los enumerados.
+
+**Clases para gestionar los roles:**
+- Clase `Role`: clase que hereda de Enumeration y que se encarga de gestionar los roles.
+- Clase `RoleConfiguration`: clase que se encarga de la configuración de los roles dentro de EF.
+- Clase `UserRoleConfiguration`: clase que se encarga de la configuración de la tabla intermedia entre roles y usuarios dentro de EF.
+- Dentro de la clase `User` se ha añadido la colección de roles.
+
+**Clases para gestionar los permisos:**
+- Clase `Permission`: clase que hereda de Entity y que se encarga de gestionar los permiso
+- Clase `PermissionObjectValue`: colección de object values para los permisos.
+- Clase `PermissionEnum`: enum que contiene los permisos.
+- Dentro de la clase `Role` se ha añadido la colección de permisos.
+- Clase `RolePermission`: clase que se encarga de la configuración de la tabla intermedia entre roles y permisos. en la clase `RoleConfiguration` se indica que un rol tiene una colección de permisos.
+- Clase `RolePermissionConfiguration`:  clase que se encarga de la configuración de la tabla intermedia entre roles y permisos dentro de EF, y de insertar los datos intermedios.
+- Clase `PermissionConfiguration`: clase que se encarga de la configuración de la tabla de permisos, y de insertar esos datos maestros.

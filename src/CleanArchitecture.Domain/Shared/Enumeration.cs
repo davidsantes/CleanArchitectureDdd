@@ -23,7 +23,7 @@ public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
         return Enumerations.Values.SingleOrDefault(x => x.Name == name);
     }
 
-    public static List<TEnum> GetValuesFromName()
+    public static List<TEnum> GetValues()
     {
         return Enumerations.Values.ToList();
     }

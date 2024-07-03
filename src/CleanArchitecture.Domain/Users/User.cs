@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Domain.Abstractions;
+using CleanArchitecture.Domain.Roles;
 using CleanArchitecture.Domain.Users.Events;
 
 namespace CleanArchitecture.Domain.Users;
@@ -8,16 +9,16 @@ public sealed class User : Entity<UserId>
     /// <summary>
     /// Constructor necesario para que EF funcione.
     /// </summary>
-    private User()
-    { }
+    private User() { }
 
     private User(
-        UserId id
-        , Nombre nombre
-        , Apellido apellido
-        , Email email
-        , PasswordHash passwordHash
-        ) : base(id)
+        UserId id,
+        Nombre nombre,
+        Apellido apellido,
+        Email email,
+        PasswordHash passwordHash
+    )
+        : base(id)
     {
         Nombre = nombre;
         Apellido = apellido;
@@ -31,14 +32,16 @@ public sealed class User : Entity<UserId>
     public PasswordHash? PasswordHash { get; private set; }
 
     public static User Create(
-        Nombre nombre
-        , Apellido apellido
-        , Email email
-        , PasswordHash passwordHash
-        )
+        Nombre nombre,
+        Apellido apellido,
+        Email email,
+        PasswordHash passwordHash
+    )
     {
         var user = new User(UserId.New(), nombre, apellido, email, passwordHash);
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id!));
         return user;
     }
+
+    public ICollection<Role>? Roles { get; set; }
 }
