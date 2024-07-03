@@ -34,11 +34,11 @@ if (app.Environment.IsDevelopment())
 }
 
 //Aplica las migraciones, comentar si no se quiere ejecutar (excluyente de SeedData..., primero lanzar ApplyMigration y luego la inserción de datos):
-//app.ApplyMigration();
+app.ApplyMigration();
 
 //Inserta datos ficticios, comentar si no se quiere ejecutar:
-app.SeedDataUsers();
-app.SeedDataVehiculos();
+//app.SeedDataUsers();
+//app.SeedDataVehiculos();
 
 app.UseCustomExceptionHandler();
 

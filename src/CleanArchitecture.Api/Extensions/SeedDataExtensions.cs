@@ -57,7 +57,7 @@ public static class SeedDataExtensions
     }
 
     /// <summary>
-    /// Método de extensión para sembrar datos ficticios en la base de datos.
+    /// Método de extensión para sembrar datos ficticios de vehículos en la base de datos.
     /// </summary>
     public static void SeedDataVehiculos(this IApplicationBuilder app)
     {
@@ -99,27 +99,5 @@ public static class SeedDataExtensions
             """;
 
         connection.Execute(sqlVehiculos, vehiculos);
-
-        //List<object> users = new();
-        //for (var i = 0; i < 10; i++)
-        //{
-        //    users.Add(
-        //        new
-        //        {
-        //            Id = Guid.NewGuid(),
-        //            Nombre = faker.Name.FirstName(),
-        //            Apellido = faker.Name.LastName(),
-        //            Email = faker.Internet.Email()
-        //        }
-        //    );
-        //}
-
-        //const string sqlUsuarios = """
-        //        INSERT INTO users
-        //            (id, nombre, apellido, email)
-        //            values(@id, @nombre, @apellido, @email)
-        //    """;
-
-        //connection.Execute(sqlUsuarios, users);
     }
 }
