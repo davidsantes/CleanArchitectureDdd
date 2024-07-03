@@ -12,7 +12,7 @@ public static class SeedDataExtensions
     /// <summary>
     /// Método de extensión para sembrar datos ficticios de usuarios en la base de datos.
     /// </summary>
-    public static void SeedDataAuthentication(this IApplicationBuilder app)
+    public static void SeedDataUsers(this IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();
         var service = scope.ServiceProvider;
@@ -59,7 +59,7 @@ public static class SeedDataExtensions
     /// <summary>
     /// Método de extensión para sembrar datos ficticios en la base de datos.
     /// </summary>
-    public static void SeedData(this IApplicationBuilder app)
+    public static void SeedDataVehiculos(this IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();
         var sqlConnectionFactory =
@@ -94,8 +94,7 @@ public static class SeedDataExtensions
         }
 
         const string sqlVehiculos = """
-                INSERT INTO vehiculos
-                    (id, vin, modelo, direccion_pais, direccion_departamento, direccion_provincia, direccion_ciudad, direccion_calle, precio_monto, precio_tipo_moneda, mantenimiento_monto, mantenimiento_tipo_moneda, accesorios, fecha_ultima_alquiler)
+                INSERT INTO vehiculos (id, vin, modelo, direccion_pais, direccion_departamento, direccion_provincia, direccion_ciudad, direccion_calle, precio_monto, precio_tipo_moneda, mantenimiento_monto, mantenimiento_tipo_moneda, accesorios, fecha_ultima_alquiler)
                     values(@id, @Vin, @Modelo, @Pais, @Departamento, @Provincia, @Ciudad, @Calle, @PrecioMonto, @PrecioTipoMoneda, @PrecioMantenimiento, @PrecioMantenimientoTipoMoneda, @Accesorios, @FechaUltima)
             """;
 

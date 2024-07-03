@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchitecture.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240624121051_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240703150412_MigracionInicial")]
+    partial class MigracionInicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,39 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("alquileres", (string)null);
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Domain.Permissions.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("text")
+                        .HasColumnName("nombre");
+
+                    b.HasKey("Id")
+                        .HasName("pk_permissions");
+
+                    b.ToTable("permissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nombre = "ReadUser"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nombre = "WriteUser"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nombre = "UpdateUser"
+                        });
+                });
+
             modelBuilder.Entity("CleanArchitecture.Domain.Reviews.Review", b =>
                 {
                     b.Property<Guid>("Id")
@@ -121,6 +154,79 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.ToTable("reviews", (string)null);
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Domain.Roles.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_roles");
+
+                    b.ToTable("roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Cliente"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Admin"
+                        });
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Roles.RolePermission", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer")
+                        .HasColumnName("role_id");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("permission_id");
+
+                    b.HasKey("RoleId", "PermissionId")
+                        .HasName("pk_role_permissions");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permissions_permission_id");
+
+                    b.ToTable("role_permissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 1
+                        });
+                });
+
             modelBuilder.Entity("CleanArchitecture.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -155,6 +261,25 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .HasDatabaseName("ix_users_email");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Users.UserRole", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer")
+                        .HasColumnName("role_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("RoleId", "UserId")
+                        .HasName("pk_user_roles");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_user_roles_user_id");
+
+                    b.ToTable("user_roles", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Vehiculos.Vehiculo", b =>
@@ -352,6 +477,40 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("VehiculoId")
                         .HasConstraintName("fk_reviews_vehiculos_vehiculo_id");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Roles.RolePermission", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Permissions.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_permissions_permission_id");
+
+                    b.HasOne("CleanArchitecture.Domain.Roles.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Users.UserRole", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Roles.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_roles_roles_role_id");
+
+                    b.HasOne("CleanArchitecture.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_roles_users_user_id");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Vehiculos.Vehiculo", b =>

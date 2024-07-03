@@ -33,12 +33,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//Aplica las migraciones, comentar si no se quiere ejecutar:
-app.ApplyMigration();
+//Aplica las migraciones, comentar si no se quiere ejecutar (excluyente de SeedData..., primero lanzar ApplyMigration y luego la inserción de datos):
+//app.ApplyMigration();
 
 //Inserta datos ficticios, comentar si no se quiere ejecutar:
-//app.SeedData();
-//app.SeedDataAuthentication();
+app.SeedDataUsers();
+app.SeedDataVehiculos();
 
 app.UseCustomExceptionHandler();
 
