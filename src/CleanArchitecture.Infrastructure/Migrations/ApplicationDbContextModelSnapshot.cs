@@ -3,8 +3,8 @@ using System;
 using CleanArchitecture.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -17,57 +17,45 @@ namespace CleanArchitecture.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("CleanArchitecture.Domain.Alquileres.Alquiler", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("FechaCancelacion")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fecha_cancelacion");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaCompletado")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fecha_completado");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaConfirmacion")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fecha_confirmacion");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaCreacion")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fecha_creacion");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("FechaDenegacion")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fecha_denegacion");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer")
-                        .HasColumnName("status");
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("VehiculoId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("vehiculo_id");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id")
-                        .HasName("pk_alquileres");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_alquileres_user_id");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("VehiculoId")
-                        .HasDatabaseName("ix_alquileres_vehiculo_id");
+                    b.HasIndex("VehiculoId");
 
                     b.ToTable("alquileres", (string)null);
                 });
@@ -75,15 +63,12 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Permissions.Permission", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
                     b.Property<string>("Nombre")
-                        .HasColumnType("text")
-                        .HasColumnName("nombre");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_permissions");
+                    b.HasKey("Id");
 
                     b.ToTable("permissions", (string)null);
 
@@ -108,45 +93,34 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Reviews.Review", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("AlquilerId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("alquiler_id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comentario")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("comentario");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime?>("FechaCreacion")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fecha_creacion");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("Rating")
-                        .HasColumnType("integer")
-                        .HasColumnName("rating");
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("VehiculoId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("vehiculo_id");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id")
-                        .HasName("pk_reviews");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AlquilerId")
-                        .HasDatabaseName("ix_reviews_alquiler_id");
+                    b.HasIndex("AlquilerId");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_reviews_user_id");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("VehiculoId")
-                        .HasDatabaseName("ix_reviews_vehiculo_id");
+                    b.HasIndex("VehiculoId");
 
                     b.ToTable("reviews", (string)null);
                 });
@@ -155,18 +129,15 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_roles");
+                    b.HasKey("Id");
 
                     b.ToTable("roles", (string)null);
 
@@ -186,18 +157,14 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Roles.RolePermission", b =>
                 {
                     b.Property<int>("RoleId")
-                        .HasColumnType("integer")
-                        .HasColumnName("role_id");
+                        .HasColumnType("int");
 
                     b.Property<int>("PermissionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("permission_id");
+                        .HasColumnType("int");
 
-                    b.HasKey("RoleId", "PermissionId")
-                        .HasName("pk_roles_permissions");
+                    b.HasKey("RoleId", "PermissionId");
 
-                    b.HasIndex("PermissionId")
-                        .HasDatabaseName("ix_roles_permissions_permission_id");
+                    b.HasIndex("PermissionId");
 
                     b.ToTable("roles_permissions", (string)null);
 
@@ -227,35 +194,29 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Apellido")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("apellido");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(400)
-                        .HasColumnType("character varying(400)")
-                        .HasColumnName("email");
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<string>("Nombre")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("nombre");
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PasswordHash")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("password_hash");
+                        .HasColumnType("nvarchar(2000)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_users");
+                    b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasDatabaseName("ix_users_email");
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("users", (string)null);
                 });
@@ -263,18 +224,14 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Users.UserRole", b =>
                 {
                     b.Property<int>("RoleId")
-                        .HasColumnType("integer")
-                        .HasColumnName("role_id");
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("RoleId", "UserId")
-                        .HasName("pk_users_roles");
+                    b.HasKey("RoleId", "UserId");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_users_roles_user_id");
+                    b.HasIndex("UserId");
 
                     b.ToTable("users_roles", (string)null);
                 });
@@ -282,36 +239,29 @@ namespace CleanArchitecture.Infrastructure.Migrations
             modelBuilder.Entity("CleanArchitecture.Domain.Vehiculos.Vehiculo", b =>
                 {
                     b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int[]>("Accesorios")
+                    b.Property<string>("Accesorios")
                         .IsRequired()
-                        .HasColumnType("integer[]")
-                        .HasColumnName("accesorios");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("FechaUltimaAlquiler")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("fecha_ultima_alquiler");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Modelo")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("modelo");
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<uint>("Version")
+                    b.Property<long>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Vin")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("vin");
+                        .HasColumnType("nvarchar(500)");
 
-                    b.HasKey("Id")
-                        .HasName("pk_vehiculos");
+                    b.HasKey("Id");
 
                     b.ToTable("vehiculos", (string)null);
                 });
@@ -320,131 +270,109 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 {
                     b.HasOne("CleanArchitecture.Domain.Users.User", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_alquileres_users_user_id");
+                        .HasForeignKey("UserId");
 
                     b.HasOne("CleanArchitecture.Domain.Vehiculos.Vehiculo", null)
                         .WithMany()
-                        .HasForeignKey("VehiculoId")
-                        .HasConstraintName("fk_alquileres_vehiculos_vehiculo_id");
+                        .HasForeignKey("VehiculoId");
 
                     b.OwnsOne("CleanArchitecture.Domain.Shared.Moneda", "Accesorios", b1 =>
                         {
                             b1.Property<Guid>("AlquilerId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<decimal>("Monto")
-                                .HasColumnType("numeric")
-                                .HasColumnName("accesorios_monto");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<string>("TipoMoneda")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("accesorios_tipo_moneda");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("AlquilerId");
 
                             b1.ToTable("alquileres");
 
                             b1.WithOwner()
-                                .HasForeignKey("AlquilerId")
-                                .HasConstraintName("fk_alquileres_alquileres_id");
+                                .HasForeignKey("AlquilerId");
                         });
 
                     b.OwnsOne("CleanArchitecture.Domain.Shared.Moneda", "Mantenimiento", b1 =>
                         {
                             b1.Property<Guid>("AlquilerId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<decimal>("Monto")
-                                .HasColumnType("numeric")
-                                .HasColumnName("mantenimiento_monto");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<string>("TipoMoneda")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("mantenimiento_tipo_moneda");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("AlquilerId");
 
                             b1.ToTable("alquileres");
 
                             b1.WithOwner()
-                                .HasForeignKey("AlquilerId")
-                                .HasConstraintName("fk_alquileres_alquileres_id");
+                                .HasForeignKey("AlquilerId");
                         });
 
                     b.OwnsOne("CleanArchitecture.Domain.Shared.Moneda", "PrecioPorPeriodo", b1 =>
                         {
                             b1.Property<Guid>("AlquilerId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<decimal>("Monto")
-                                .HasColumnType("numeric")
-                                .HasColumnName("precio_por_periodo_monto");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<string>("TipoMoneda")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("precio_por_periodo_tipo_moneda");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("AlquilerId");
 
                             b1.ToTable("alquileres");
 
                             b1.WithOwner()
-                                .HasForeignKey("AlquilerId")
-                                .HasConstraintName("fk_alquileres_alquileres_id");
+                                .HasForeignKey("AlquilerId");
                         });
 
                     b.OwnsOne("CleanArchitecture.Domain.Shared.Moneda", "PrecioTotal", b1 =>
                         {
                             b1.Property<Guid>("AlquilerId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<decimal>("Monto")
-                                .HasColumnType("numeric")
-                                .HasColumnName("precio_total_monto");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<string>("TipoMoneda")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("precio_total_tipo_moneda");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("AlquilerId");
 
                             b1.ToTable("alquileres");
 
                             b1.WithOwner()
-                                .HasForeignKey("AlquilerId")
-                                .HasConstraintName("fk_alquileres_alquileres_id");
+                                .HasForeignKey("AlquilerId");
                         });
 
                     b.OwnsOne("CleanArchitecture.Domain.Alquileres.DateRange", "Duracion", b1 =>
                         {
                             b1.Property<Guid>("AlquilerId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<DateOnly>("Fin")
-                                .HasColumnType("date")
-                                .HasColumnName("duracion_fin");
+                                .HasColumnType("date");
 
                             b1.Property<DateOnly>("Inicio")
-                                .HasColumnType("date")
-                                .HasColumnName("duracion_inicio");
+                                .HasColumnType("date");
 
                             b1.HasKey("AlquilerId");
 
                             b1.ToTable("alquileres");
 
                             b1.WithOwner()
-                                .HasForeignKey("AlquilerId")
-                                .HasConstraintName("fk_alquileres_alquileres_id");
+                                .HasForeignKey("AlquilerId");
                         });
 
                     b.Navigation("Accesorios");
@@ -462,18 +390,15 @@ namespace CleanArchitecture.Infrastructure.Migrations
                 {
                     b.HasOne("CleanArchitecture.Domain.Alquileres.Alquiler", null)
                         .WithMany()
-                        .HasForeignKey("AlquilerId")
-                        .HasConstraintName("fk_reviews_alquileres_alquiler_id");
+                        .HasForeignKey("AlquilerId");
 
                     b.HasOne("CleanArchitecture.Domain.Users.User", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("fk_reviews_users_user_id");
+                        .HasForeignKey("UserId");
 
                     b.HasOne("CleanArchitecture.Domain.Vehiculos.Vehiculo", null)
                         .WithMany()
-                        .HasForeignKey("VehiculoId")
-                        .HasConstraintName("fk_reviews_vehiculos_vehiculo_id");
+                        .HasForeignKey("VehiculoId");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Roles.RolePermission", b =>
@@ -482,15 +407,13 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_roles_permissions_permissions_permission_id");
+                        .IsRequired();
 
                     b.HasOne("CleanArchitecture.Domain.Roles.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_roles_permissions_roles_role_id");
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Users.UserRole", b =>
@@ -499,15 +422,13 @@ namespace CleanArchitecture.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_users_roles_roles_role_id");
+                        .IsRequired();
 
                     b.HasOne("CleanArchitecture.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_users_roles_users_user_id");
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Vehiculos.Vehiculo", b =>
@@ -515,89 +436,74 @@ namespace CleanArchitecture.Infrastructure.Migrations
                     b.OwnsOne("CleanArchitecture.Domain.Vehiculos.Direccion", "Direccion", b1 =>
                         {
                             b1.Property<Guid>("VehiculoId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Calle")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("direccion_calle");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Ciudad")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("direccion_ciudad");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Departamento")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("direccion_departamento");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Pais")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("direccion_pais");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Provincia")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("direccion_provincia");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("VehiculoId");
 
                             b1.ToTable("vehiculos");
 
                             b1.WithOwner()
-                                .HasForeignKey("VehiculoId")
-                                .HasConstraintName("fk_vehiculos_vehiculos_id");
+                                .HasForeignKey("VehiculoId");
                         });
 
                     b.OwnsOne("CleanArchitecture.Domain.Shared.Moneda", "Mantenimiento", b1 =>
                         {
                             b1.Property<Guid>("VehiculoId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<decimal>("Monto")
-                                .HasColumnType("numeric")
-                                .HasColumnName("mantenimiento_monto");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<string>("TipoMoneda")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("mantenimiento_tipo_moneda");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("VehiculoId");
 
                             b1.ToTable("vehiculos");
 
                             b1.WithOwner()
-                                .HasForeignKey("VehiculoId")
-                                .HasConstraintName("fk_vehiculos_vehiculos_id");
+                                .HasForeignKey("VehiculoId");
                         });
 
                     b.OwnsOne("CleanArchitecture.Domain.Shared.Moneda", "Precio", b1 =>
                         {
                             b1.Property<Guid>("VehiculoId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<decimal>("Monto")
-                                .HasColumnType("numeric")
-                                .HasColumnName("precio_monto");
+                                .HasColumnType("decimal(18,2)");
 
                             b1.Property<string>("TipoMoneda")
                                 .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("precio_tipo_moneda");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("VehiculoId");
 
                             b1.ToTable("vehiculos");
 
                             b1.WithOwner()
-                                .HasForeignKey("VehiculoId")
-                                .HasConstraintName("fk_vehiculos_vehiculos_id");
+                                .HasForeignKey("VehiculoId");
                         });
 
                     b.Navigation("Direccion");

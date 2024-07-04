@@ -173,3 +173,27 @@ Esquema:
 - Clase `PermissionAuthorizationPolicyProvider`: proporciona una política de autorización personalizada basada en permisos.
 - Clase `PermissionRequirement`: representa un requisito de autorización para verificar si un usuario tiene un permiso específico.
 - La clase `JwtProvider` se ha modificado para que devuelva un token con los claims del usuario y sus permisos.
+
+La migración a nivel de roles generará un esquema como el siguiente:
+
+![My Image](./docs/imgs/11.AuthorizationJWT_5.PNG)
+
+## ¿Cómo probar los cambios?
+
+- Mediante postman, lanzar users/login. Si introducimos alguno de los usuarios y passwords de la aplicación:
+
+| Email            | Password |
+|------------------|----------|
+| admin@aaa.com| Admin123$ |
+| cliente@aaa.com| Test123$ |
+
+El usuario conseguirá un token como el siguiente:
+
+```eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJVc2VySWQgeyBWYWx1ZSA9IGZkYmRkYTNlLWRmNjgtNDc3Ny1hMTM5LTUxMWFkZmJjZmE0YyB9IiwiZW1haWwiOiJhZG1pbkBhYWEuY29tIiwicGVybWlzc2lvbnMiOlsiUmVhZFVzZXIiLCJXcml0ZVVzZXIiLCJVcGRhdGVVc2VyIl0sImV4cCI6MTc1MTYzMjc4MCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo5MDAwIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo5MDAwIn0.97QLlTLLQEEbv2dj8Zi0S5CibIcVnKx3_iJSST6G2nU```
+
+Este token se puede visualizar en la web [https://jwt.io/](https://jwt.io/) con el siguiente formato:
+![My Image](./docs/imgs/11.AuthorizationJWT_6.PNG)
+
+Con ese token se podrá acceder a realizar una búsqueda en una consulta protegida por JWT (`[HasPermission(PermissionEnum.ReadUser)]`), como es el caso de `Search` de `Vehiculos`:
+
+![My Image](./docs/imgs/11.AuthorizationJWT_7.PNG)

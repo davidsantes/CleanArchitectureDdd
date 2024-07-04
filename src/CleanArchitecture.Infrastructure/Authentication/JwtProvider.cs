@@ -32,13 +32,13 @@ public sealed class JwtProvider : IJwtProvider
                 p.nombre
             FROM users usr
                 LEFT JOIN users_roles usrl
-                    ON usr.id = usrl.user_id
+                    ON usr.id = usrl.UserId
                 LEFT JOIN roles rl
-                    ON rl.id = usrl.role_id
+                    ON rl.id = usrl.RoleId
                 LEFT JOIN roles_permissions rp
-                    ON rl.id = rp.role_id
+                    ON rl.id = rp.RoleId
                 LEFT JOIN permissions p
-                    ON p.id = rp.permission_id
+                    ON p.id = rp.PermissionId
             WHERE usr.id = @UserId;
             """;
 

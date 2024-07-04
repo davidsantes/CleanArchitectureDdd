@@ -20,21 +20,45 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration
-        )
+    )
     {
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<IEmailService, EmailService>();
 
-        var connectionString = configuration.GetConnectionString("Database")
-             ?? throw new ArgumentNullException(nameof(configuration));
+        // Configuración del contexto de la base de datos utilizando SQL Server
+        services.Configure<DatabaseEntityFrameworkOptions>(
+            configuration.GetSection(DatabaseEntityFrameworkOptions.SectionName)
+        );
 
-        // Configuración del contexto de la base de datos utilizando Npgsql (PostgreSQL) y convenciones de nomenclatura SnakeCase.
-        // Las convenciones de nomenclatura SnakeCase se refieren a un estilo de escritura de identificadores donde las palabras se separan por guiones bajos (_). Por ejemplo, en SnakeCase, una frase como "nombreDeUsuario"
-        // se escribiría como "nombre_de_usuario".
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
-        });
+        var databaseEntityFrameworkOptions = configuration
+            .GetSection(DatabaseEntityFrameworkOptions.SectionName)
+            .Get<DatabaseEntityFrameworkOptions>();
+
+        services.AddDbContext<ApplicationDbContext>(
+            (serviceProvider, dbContextOptionBuilder) =>
+            {
+                dbContextOptionBuilder.UseSqlServer(
+                    databaseEntityFrameworkOptions!.ConnectionString,
+                    sqlServerAction =>
+                    {
+                        sqlServerAction.EnableRetryOnFailure(
+                            databaseEntityFrameworkOptions.MaxRetryCount
+                        );
+                        sqlServerAction.CommandTimeout(
+                            databaseEntityFrameworkOptions.CommandTimeout
+                        );
+                    }
+                );
+
+                //Sólo para entornos de debug, ya que baja el rendimiento y expone datos sensibles.
+                dbContextOptionBuilder.EnableDetailedErrors(
+                    databaseEntityFrameworkOptions.EnableDetailedErrors
+                );
+                dbContextOptionBuilder.EnableSensitiveDataLogging(
+                    databaseEntityFrameworkOptions.EnableSensitiveDataLogging
+                );
+            }
+        );
 
         // Registro de implementaciones de repositorios como servicios de ámbito:
         services.AddScoped<IUserRepository, UserRepository>();
@@ -46,8 +70,9 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         // Registro de implementación de ISqlConnectionFactory como servicio singleton, utilizando la cadena de conexión a la base de datos
-        // Esta co
-        services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
+        services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(
+            databaseEntityFrameworkOptions!.ConnectionString
+        ));
 
         // Registro de un manejador de tipo personalizado para Dapper para el tipo DateOnly:
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());

@@ -43,8 +43,9 @@ if (app.Environment.IsDevelopment())
 app.ApplyMigration();
 
 //Inserta datos ficticios, comentar si no se quiere ejecutar:
-//app.SeedDataUsers();
-//app.SeedDataVehiculos();
+app.SeedDataUsers();
+app.SeedDataUsersRoles().Wait();
+app.SeedDataVehiculos();
 
 app.UseCustomExceptionHandler();
 

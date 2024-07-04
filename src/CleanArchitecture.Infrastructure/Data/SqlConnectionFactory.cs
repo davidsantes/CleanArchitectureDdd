@@ -1,6 +1,6 @@
 using System.Data;
 using CleanArchitecture.Application.Abstractions.Data;
-using Npgsql;
+using Microsoft.Data.SqlClient;
 
 namespace CleanArchitecture.Infrastructure.Data;
 
@@ -18,7 +18,7 @@ internal sealed class SqlConnectionFactory : ISqlConnectionFactory
 
     public IDbConnection CreateConnection()
     {
-        var connection = new NpgsqlConnection(_connectionString);
+        var connection = new SqlConnection(_connectionString);
         connection.Open();
 
         return connection;

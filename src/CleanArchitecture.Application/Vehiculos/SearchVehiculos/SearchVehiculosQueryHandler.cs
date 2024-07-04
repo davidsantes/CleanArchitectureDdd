@@ -12,7 +12,7 @@ namespace CleanArchitecture.Application.Vehiculos.SearchVehiculos;
 /// La clase que sí es pública a la capa de presentación es <see cref="SearchVehiculosQuery"/>.
 /// </summary>
 internal sealed class SearchVehiculosQueryHandler
- : IQueryHandler<SearchVehiculosQuery, IReadOnlyList<VehiculoResponse>>
+    : IQueryHandler<SearchVehiculosQuery, IReadOnlyList<VehiculoResponse>>
 {
     /// <summary>
     /// Define los estados de alquiler considerados como activos.
@@ -45,50 +45,51 @@ internal sealed class SearchVehiculosQueryHandler
         using var connection = _sqlConectionFactory.CreateConnection();
 
         const string sql = """
-             SELECT
-                a.id as Id,
-                a.modelo as Modelo,
-                a.vin as Vin,
-                a.precio_monto as Precio,
-                a.precio_tipo_moneda as TipoMoneda,
-                a.direccion_pais as Pais,
-                a.direccion_departamento as Departamento,
-                a.direccion_provincia as Provincia,
-                a.direccion_ciudad as Ciudad,
-                a.direccion_calle as Calle
-             FROM vehiculos AS a
-             WHERE NOT EXISTS
-             (
-                    SELECT 1
-                    FROM alquileres AS b
-                    WHERE
-                        b.vehiculo_id = a.id AND
-                        b.duracion_inicio <= @EndDate AND
-                        b.duracion_fin >= @StartDate AND
-                        b.status = ANY(@ActiveAlquilerStatuses)
-             )
-        """;
+                 SELECT
+                    a.Id as Id,
+                    a.Modelo as Modelo,
+                    a.Vin as Vin,
+                    a.Precio_Monto as Precio,
+                    a.Precio_TipoMoneda as TipoMoneda,
+                    a.Direccion_Pais as Pais,
+                    a.Direccion_Departamento as Departamento,
+                    a.Direccion_Provincia as Provincia,
+                    a.Direccion_Ciudad as Ciudad,
+                    a.Direccion_Calle as Calle
+                 FROM vehiculos AS a
+                 WHERE NOT EXISTS
+                 (
+                        SELECT 1
+                        FROM alquileres AS b
+                        WHERE
+                            b.VehiculoId = a.id AND
+                            b.Duracion_Inicio <= @EndDate AND
+                            b.Duracion_Fin >= @StartDate
+                 )
+            """;
 
         // Se ejecuta la consulta SQL y se espera el resultado asincrónico.
         // Devuelve un VehiculoResponse y un DireccionResponse, que está incluido en un VehiculoResponse
-        var vehiculos = await connection
-            .QueryAsync<VehiculoResponse, DireccionResponse, VehiculoResponse>
-            (
-                sql,
-                //Indica que el vehículo va a tener una dirección.
-                (vehiculo, direccion) =>
-                {
-                    vehiculo.Direccion = direccion;
-                    return vehiculo;
-                },
-                new
-                {
-                    StartDate = request.fechaInicio,
-                    EndDate = request.fechaFin,
-                    ActiveAlquilerStatuses
-                },
-                splitOn: "Pais"
-            );
+        var vehiculos = await connection.QueryAsync<
+            VehiculoResponse,
+            DireccionResponse,
+            VehiculoResponse
+        >(
+            sql,
+            //Indica que el vehículo va a tener una dirección.
+            (vehiculo, direccion) =>
+            {
+                vehiculo.Direccion = direccion;
+                return vehiculo;
+            },
+            new
+            {
+                StartDate = request.fechaInicio,
+                EndDate = request.fechaFin,
+                ActiveAlquilerStatuses
+            },
+            splitOn: "Pais"
+        );
 
         return vehiculos.ToList();
     }

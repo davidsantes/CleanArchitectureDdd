@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "imgs", "imgs", "{C4FA67FC-3
 	ProjectSection(SolutionItems) = preProject
 		docs\imgs\00.DDD.JPG = docs\imgs\00.DDD.JPG
 		docs\imgs\01.Domain.JPG = docs\imgs\01.Domain.JPG
-		docs\imgs\02.Bdd.JPG = docs\imgs\02.Bdd.JPG
+		docs\imgs\02.Bdd.png = docs\imgs\02.Bdd.png
 		docs\imgs\03.CleanArchitecture.Domain.Folders.JPG = docs\imgs\03.CleanArchitecture.Domain.Folders.JPG
 		docs\imgs\04.CleanArchitecture.Application.Folders.JPG = docs\imgs\04.CleanArchitecture.Application.Folders.JPG
 		docs\imgs\05.CleanArchitecture.Infrastructure.Folders.JPG = docs\imgs\05.CleanArchitecture.Infrastructure.Folders.JPG
@@ -44,6 +44,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "imgs", "imgs", "{C4FA67FC-3
 		docs\imgs\09.Authentication.JPG = docs\imgs\09.Authentication.JPG
 		docs\imgs\11.AuthorizationJWT_1.PNG = docs\imgs\11.AuthorizationJWT_1.PNG
 		docs\imgs\11.AuthorizationJWT_2.PNG = docs\imgs\11.AuthorizationJWT_2.PNG
+		docs\imgs\11.AuthorizationJWT_5.PNG = docs\imgs\11.AuthorizationJWT_5.PNG
+		docs\imgs\11.AuthorizationJWT_6.PNG = docs\imgs\11.AuthorizationJWT_6.PNG
+		docs\imgs\11.AuthorizationJWT_7.PNG = docs\imgs\11.AuthorizationJWT_7.PNG
 	EndProjectSection
 EndProject
 Global

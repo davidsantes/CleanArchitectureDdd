@@ -39,13 +39,11 @@ Ejercicios tomados del curso de .Net University en Udemy: **Clean Architecture y
 ## Pre-requisitos 📋
 Como herramientas de desarrollo necesitarás:
 * Visual Studio 2022 (con la versión para .NET 8)
-* Acceso para Postgre SQL, ya que la base de datos es de este tipo, con una de las siguientes versiones:
-	* (Versión utilizada en el ejemplo) Usar una base de datos en local descargando [PostgreSql](https://www.postgresql.org/).
-	* Usar una base de datos de PostgreSql online [Neon.Tech](https://neon.tech/).
+* SQL Server.
 
 ## Antes de comenzar... entiende la base de datos que vamos a utilizar ⚙️
 Los ejemplos se realizan sobre una base de datos de alquileres de coches.
-![My Image](./docs/imgs/02.Bdd.JPG)
+![My Image](./docs/imgs/02.Bdd.png)
 
 | Alquileres | Reviews | Users | Vehículos |
 |------------|------------|------------|------------|
@@ -166,7 +164,7 @@ Además, al ser Code First, existirá una tabla con las migraciones:
 ![My Image](./docs/imgs/05.CleanArchitecture.Infrastructure.Folders.JPG)
 
 **Paquetes Nuget:**
-* Uso de `EFCore.NamingConventions`, `Microsoft.EntityFrameworkCore`, `Microsoft.EntityFrameworkCore.Tools`, `Npgsql.EntityFrameworkCore.PostgreSQL`.
+* Uso de `Microsoft.EntityFrameworkCore`, `Microsoft.EntityFrameworkCore.Tools`, `Microsoft.EntityFrameworkCore.SqlServer`.
 
 **Carpeta `Configurations`, que dentro contiene, los mapeos de las entidades a las tablas de base de datos.**
 
@@ -232,9 +230,10 @@ Si todo ha ido correctamente, habrá creado una migración como:
 
 5. Una vez creadas las migraciones, la clase `program.cs` del proyecto `CleanArchitecture.Api` llamará a:
 	- `ApplicationBuilderExtensions.ApplyMigration` para ejecutar las migraciones.
-	- `SeedDataExtensions.SeedData` para generar datos por defecto. Utiliza la librería `Bogus` para introducir datos fake.
+	- `SeedDataExtensions` para generar datos por defecto. Utiliza la librería `Bogus` para introducir datos fake.
 
 6. Ejecutar el proyecto `CleanArchitecture.Api`, y se creará tanto la base de datos como datos en las tablas:
+ 
 ![My Image](./docs/imgs/08.Bdd_Tablas1.JPG)
 
 ## Captura de excepciones
