@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "imgs", "imgs", "{C4FA67FC-3
 		docs\imgs\08.Bdd_Tablas5.JPG = docs\imgs\08.Bdd_Tablas5.JPG
 		docs\imgs\08.Bdd_Tablas6.JPG = docs\imgs\08.Bdd_Tablas6.JPG
 		docs\imgs\09.Authentication.JPG = docs\imgs\09.Authentication.JPG
+		docs\imgs\11.AuthorizationJWT_1.PNG = docs\imgs\11.AuthorizationJWT_1.PNG
+		docs\imgs\11.AuthorizationJWT_2.PNG = docs\imgs\11.AuthorizationJWT_2.PNG
 	EndProjectSection
 EndProject
 Global

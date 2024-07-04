@@ -10,6 +10,7 @@ Para poder realizarlo, es necesario tener claro el curso anterior: **Clean Archi
 2. **[SECCIÓN 03. Modelos de authentication en clean architecture](#Seccion_03_Authentication)**
 3. **[SECCIÓN 04. Seguridad y migración de EF en Clean architecture](#Seccion_04_Migracion)**
 4. **[SECCIÓN 06. Authorization con permisos y roles en Clean Architecture](#Seccion_06_Authorization)**
+5. **[SECCIÓN 07. Authorization en Controllers y Json Web Tokens (JWT)](#Seccion_07_Authorization_Jwt)**
 
 ---
 
@@ -121,8 +122,6 @@ A su vez, usa las clases:
 
 # SECCIÓN 06. Authorization con permisos y roles en Clean Architecture <a name="Seccion_06_Authorization"></a>
 
-4. **[Authorization con permisos y roles en Clean Architecture](#Seccion_03_Authorization)**
-
 - Un buen sistema para el proceso de autorización del producto es el siguiente:
 	- **Usuarios:** varios usuarios (en la carga inicial habrá al menos 2)
 	- **Roles:**
@@ -154,3 +153,23 @@ Para gestionar los roles y permisos, se han creado las siguientes clases:
 - Clase `RolePermission`: clase que se encarga de la configuración de la tabla intermedia entre roles y permisos. en la clase `RoleConfiguration` se indica que un rol tiene una colección de permisos.
 - Clase `RolePermissionConfiguration`:  clase que se encarga de la configuración de la tabla intermedia entre roles y permisos dentro de EF, y de insertar los datos intermedios.
 - Clase `PermissionConfiguration`: clase que se encarga de la configuración de la tabla de permisos, y de insertar esos datos maestros.
+
+
+# SECCIÓN 07. Authorization en Controllers y Json Web Tokens (JWT) <a name="Seccion_07_Authorization_Jwt"></a>
+
+Esquema:
+
+| ![My Image](./docs/imgs/11.AuthorizationJWT_1.PNG) | ![My Image](./docs/imgs/11.AuthorizationJWT_2.PNG) |
+|:---------------------------------------------:|:---------------------------------------------:|
+| ![My Image](./docs/imgs/11.AuthorizationJWT_3.PNG) | ![My Image](./docs/imgs/11.AuthorizationJWT_4.PNG) |
+
+- Lorem ipsum.
+
+**Clases en CleanArchitecture.Infrastructure:**
+
+- Clase `CustomClaims`: clase para gestionar los claims personalizados.
+- Clase `HasPermissionAttribute`: representa un atributo de autorización para verificar si un usuario tiene un permiso específico.
+- Clase `PermissionAuthorizationHandler`: representa un manejador de autorización para verificar si un usuario tiene un permiso específico.
+- Clase `PermissionAuthorizationPolicyProvider`: proporciona una política de autorización personalizada basada en permisos.
+- Clase `PermissionRequirement`: representa un requisito de autorización para verificar si un usuario tiene un permiso específico.
+- La clase `JwtProvider` se ha modificado para que devuelva un token con los claims del usuario y sus permisos.

@@ -5,6 +5,7 @@ using CleanArchitecture.Application.Abstractions.Authentication;
 using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,11 @@ builder.Services.AddTransient<IJwtProvider, JwtProvider>();
 
 //Configuración de la autorización
 builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+builder.Services.AddSingleton<
+    IAuthorizationPolicyProvider,
+    PermissionAuthorizationPolicyProvider
+>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
