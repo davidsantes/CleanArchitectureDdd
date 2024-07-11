@@ -6,8 +6,13 @@ using CleanArchitecture.Infrastructure;
 using CleanArchitecture.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(
+    (context, configuration) => configuration.ReadFrom.Configuration(context.Configuration)
+);
 
 builder.Services.AddControllers();
 
@@ -46,6 +51,9 @@ app.ApplyMigration();
 app.SeedDataUsers();
 app.SeedDataUsersRoles().Wait();
 app.SeedDataVehiculos();
+
+app.UseRequestContextLogin();
+app.UseSerilogRequestLogging();
 
 app.UseCustomExceptionHandler();
 

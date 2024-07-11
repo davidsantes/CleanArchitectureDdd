@@ -36,4 +36,12 @@ public static class ApplicationBuilderExtensions
     {
         app.UseMiddleware<ExceptionHandlingMiddleware>();
     }
+
+    /// <summary>
+    /// Método de extensión para usar un middleware personalizado para manejar el contexto de la solicitud.
+    /// </summary>
+    public static void UseRequestContextLogin(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<RequestContextLoggingMiddleware>();
+    }
 }

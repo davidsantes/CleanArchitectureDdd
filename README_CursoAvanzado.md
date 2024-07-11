@@ -11,6 +11,7 @@ Para poder realizarlo, es necesario tener claro el curso anterior: **Clean Archi
 3. **[SECCIÓN 04. Seguridad y migración de EF en Clean architecture](#Seccion_04_Migracion)**
 4. **[SECCIÓN 06. Authorization con permisos y roles en Clean Architecture](#Seccion_06_Authorization)**
 5. **[SECCIÓN 07. Authorization en Controllers y Json Web Tokens (JWT)](#Seccion_07_Authorization_Jwt)**
+6. **[SECCIÓN 08. Serilog en clean architecture y Net](#Seccion_08_Serilog)**
 
 ---
 
@@ -163,7 +164,6 @@ Esquema:
 |:---------------------------------------------:|:---------------------------------------------:|
 | ![My Image](./docs/imgs/11.AuthorizationJWT_3.PNG) | ![My Image](./docs/imgs/11.AuthorizationJWT_4.PNG) |
 
-- Lorem ipsum.
 
 **Clases en CleanArchitecture.Infrastructure:**
 
@@ -197,3 +197,27 @@ Este token se puede visualizar en la web [https://jwt.io/](https://jwt.io/) con 
 Con ese token se podrá acceder a realizar una búsqueda en una consulta protegida por JWT (`[HasPermission(PermissionEnum.ReadUser)]`), como es el caso de `Search` de `Vehiculos`:
 
 ![My Image](./docs/imgs/11.AuthorizationJWT_7.PNG)
+
+# SECCIÓN 08. Serilog en clean architecture y Net <a name="Seccion_08_Serilog"></a>
+
+Esquema:
+![My Image](./docs/imgs/12.Serilog_1.PNG)
+
+Para poder utilizar Serilog, se han utilizado los siguientes paquetes Nuget:
+- Serilog.
+- Serilog.AspNetCore.
+
+A través de Serilog, se guardan logs en:
+- Consola.
+- Ficheros de logs, con un fichero con todos los logs, y uno concreto para logs de errores.
+
+La configuración de Serilog se realiza en el archivo `appsettings.json`.
+
+Para poder utilizar Serilog, se han creado / modificado las siguientes clases:
+
+Proyecto CleanArchitecture.Infrastructure:
+- Clase `Program`: se ha modificado para que utilice Serilog.
+- Clase `RequestContextLoggingMiddleware`: Este middleware agrega un identificador de correlación a cada solicitud HTTP para facilitar el seguimiento y la depuración.
+- Clase `ApplicationBuilderExtensions`: se registra Serilog en el contenedor de dependencias.
+- Clase `LoggingBehavior`: se ha modificado su comportamiento para que registre no solamente commands, sino también queries.
+
