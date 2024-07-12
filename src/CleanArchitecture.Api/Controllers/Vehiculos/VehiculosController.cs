@@ -1,5 +1,8 @@
+using CleanArchitecture.Application.Vehiculos.GetVehiculosByPagination;
 using CleanArchitecture.Application.Vehiculos.SearchVehiculos;
+using CleanArchitecture.Domain.Abstractions;
 using CleanArchitecture.Domain.Permissions;
+using CleanArchitecture.Domain.Vehiculos;
 using CleanArchitecture.Infrastructure.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -29,5 +32,16 @@ public class VehiculosController : ControllerBase
         var query = new SearchVehiculosQuery(startDate, endDate);
         var resultados = await _sender.Send(query, cancellationToken);
         return Ok(resultados.Value);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("getPagination", Name = "PaginationVehiculos")]
+    [ProducesResponseType(typeof(PaginationResult<Vehiculo, VehiculoId>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<PaginationResult<Vehiculo, VehiculoId>>> GetPaginationVehiculos(
+        [FromQuery] GetVehiculosByPaginationQuery request
+    )
+    {
+        var resultados = await _sender.Send(request);
+        return Ok(resultados);
     }
 }

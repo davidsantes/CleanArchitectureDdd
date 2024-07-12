@@ -12,7 +12,8 @@ Para poder realizarlo, es necesario tener claro el curso anterior: **Clean Archi
 4. **[SECCIÓN 06. Authorization con permisos y roles en Clean Architecture](#Seccion_06_Authorization)**
 5. **[SECCIÓN 07. Authorization en Controllers y Json Web Tokens (JWT)](#Seccion_07_Authorization_Jwt)**
 6. **[SECCIÓN 08. Serilog en clean architecture y Net](#Seccion_08_Serilog)**
-
+7. **[SECCIÓN 09. Paginación en Clean Architecture](#Seccion_09_Paginacion)**
+ 
 ---
 
 ## Agradecimientos 🎁
@@ -220,4 +221,68 @@ Proyecto CleanArchitecture.Infrastructure:
 - Clase `RequestContextLoggingMiddleware`: Este middleware agrega un identificador de correlación a cada solicitud HTTP para facilitar el seguimiento y la depuración.
 - Clase `ApplicationBuilderExtensions`: se registra Serilog en el contenedor de dependencias.
 - Clase `LoggingBehavior`: se ha modificado su comportamiento para que registre no solamente commands, sino también queries.
+
+# SECCIÓN 09. Paginación en Clean Architecture <a name="Seccion_09_Paginacion"></a>
+
+## Conceptos básicos de uso de paginación
+- Es una técnica para administrar un volumen alto de datos.
+- Se despliega solo una porción de los datos.
+- Estas porciones se pasan en records.
+- A cada grupo se le llama página.
+
+![My Image](./docs/imgs/13.Paginacion_1.PNG)
+
+## Técnicas para paginación avanzada
+- Paginación con el patrón **Specification**.
+- Paginación con **genéricos**.
+- Paginación con **Dapper**.
+
+## Paginación con el patrón Specification
+
+Se le va a devolver al cliente:
+```csharp
+Count { get; } //Representa el número total de registros.
+PageIndex { get; } //Representa el número de página.
+PageSize { get; } //Representa cuántos records por grupos.
+Data { get; } //Representa el dato en sí, los records que devuelve la consulta.
+PageCount { get; } //Representa el número de páginas totales que se han generado.
+int ResultByPage { get; } //Representa el número de records en una página concreta.
+```
+
+La intención es que cuando se lance una consulta, se devuelva un objeto con estos campos paginados, pero que además pueda filtrar los vehículos por modelos.
+
+### ¿Cómo probar la paginación con el patrón Specification?
+
+Los ejemplos se encuentran en la colección de Postman `CleanArchitecture.postman_collection.json`.
+
+| ![My Image](./docs/imgs/13.Paginacion_2a.PNG) | ![My Image](./docs/imgs/13.Paginacion_2b.PNG) |
+|:---------------------------------------------:|:---------------------------------------------:|
+
+### ¿Qué clases se utilizan para la paginación con el patrón Specification?
+
+Para realizar la paginación, se han creado / modificado las siguientes clases / interfaces:
+
+**Capa CleanArchitecture.Domain:**
+- `ISpecification.cs`: Interfaz que define las especificaciones de consulta para las entidades.
+- `IVehiculoRepository.cs`: Interfaz que define las operaciones de consulta de vehículos y que contienen el patrón specification.
+- `BaseSpecification.cs`: Clase base para las especificaciones de consulta mediante el patrón specification, indicando `Criteria`, `Includes`, `OrderBy`, `OrderByDescending`, `Take`, `Skip`, `IsPagingEnabled`.
+- `PaginationResult.cs`: Clase de resultados que incluye paginación.
+- `SpecificationEntry.cs`: Clase utilizada en las request, que representa una entrada de especificación de consulta.
+- `VehiculoPaginationCountingSpecification.cs`: Clase de especificación para contar los vehículos.
+- `VehiculoPaginationSpecification.cs`: Clase de especificación para paginar los vehículos en función de unos criterios especificados. Hereda de la clase `BaseSpecification`.
+
+**Capa CleanArchitecture.Application:**
+- `GetVehiculosByPaginationQuery.cs`: Clase que representa la consulta para obtener vehículos paginados.
+- `GetVehiculosByPaginationQueryHandler.cs`: Clase para manejar la consulta de obtener vehículos por paginación.
+
+**Capa CleanArchitecture.Infrastructure:*
+- `SpecificationEvaluator.cs`: Clase que evalúa las especificaciones de consulta antes de enviarlas a la base de datos. Utiliza Entity Framework Core para aplicar los criterios, inclusiones, ordenamientos y paginación.
+- `Repository.cs`: se añaden los siguientes métodos:
+    - `ApplySpecification`: Método que aplica una especificación de consulta a una consulta de entidades.
+    - `GetAllWithSpec`: Método que obtiene todas las entidades que cumplen con una especificación de consulta.
+    - `CountAsync`: Método que obtiene la cantidad de entidades que cumplen con una especificación de consulta.
+
+**Capa CleanArchitecture.Api:**
+
+- `VehiculosController.cs': se añade el método `GetPaginationVehiculos` para obtener vehículos paginados.
 
