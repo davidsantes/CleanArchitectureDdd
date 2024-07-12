@@ -13,6 +13,7 @@ Para poder realizarlo, es necesario tener claro el curso anterior: **Clean Archi
 5. **[SECCIÓN 07. Authorization en Controllers y Json Web Tokens (JWT)](#Seccion_07_Authorization_Jwt)**
 6. **[SECCIÓN 08. Serilog en clean architecture y Net](#Seccion_08_Serilog)**
 7. **[SECCIÓN 09. Paginación en Clean Architecture](#Seccion_09_Paginacion)**
+8. **[SECCIÓN 12. Versionado en Apis](#Seccion_12_Versionado)**
  
 ---
 
@@ -205,8 +206,8 @@ Esquema:
 ![My Image](./docs/imgs/12.Serilog_1.PNG)
 
 Para poder utilizar Serilog, se han utilizado los siguientes paquetes Nuget:
-- Serilog.
-- Serilog.AspNetCore.
+- `Serilog`.
+- `Serilog.AspNetCore`.
 
 A través de Serilog, se guardan logs en:
 - Consola.
@@ -231,11 +232,6 @@ Proyecto CleanArchitecture.Infrastructure:
 - A cada grupo se le llama página.
 
 ![My Image](./docs/imgs/13.Paginacion_1.PNG)
-
-## Técnicas para paginación avanzada
-- Paginación con el patrón **Specification**.
-- Paginación con **genéricos**.
-- Paginación con **Dapper**.
 
 ## Paginación con el patrón Specification
 
@@ -286,3 +282,88 @@ Para realizar la paginación, se han creado / modificado las siguientes clases /
 
 - `VehiculosController.cs': se añade el método `GetPaginationVehiculos` para obtener vehículos paginados.
 
+# SECCIÓN 12. Versionado en Apis <a name="Seccion_12_Versionado"></a>
+
+Las versiones en las APIs son fundamentales para mantener la estabilidad, la flexibilidad y la evolución de los servicios. Aquí te presentamos las razones más importantes para implementar versiones en tus APIs:
+- **Compatibilidad hacia Atrás**: Las versiones permiten que los cambios en la API no rompan las aplicaciones que ya están en uso.
+- **Evolución y Mejora de Funcionalidades**: Las versiones permiten introducir nuevas características o mejoras sin interrumpir el servicio actual.
+- **Beneficio**: Los desarrolladores pueden iterar y mejorar la API a lo largo del tiempo.
+- **Desarrollo y Pruebas de Nuevas Funcionalidades**: Las versiones facilitan el desarrollo y las pruebas de nuevas funcionalidades sin afectar la producción.
+- **Gestión de Dependencias**: Permite a los desarrolladores especificar qué versión de la API usan sus aplicaciones.
+- **Comunicación Clara de Cambios**: Las versiones proporcionan una manera clara de comunicar actualizaciones y cambios a los consumidores de la API.
+- **Manejo de Errores y Depuración**: Las versiones ayudan a identificar y solucionar problemas en diferentes versiones de la API.
+- **Facilita el Soporte y la Documentación**: La versión de la API es una parte clave de la documentación técnica y el soporte.
+
+Para poder utilizar este versionado, se ha utilizado el siguiente paquetes Nuget:
+- `Asp.Versioning.Mvc`: facilita la implementación y gestión de versiones en APIs web que utilizan el framework MVC
+- `Asp.Versioning.Mvc`.ApiExplorer: facilita la integración con **Swagger** y que no produzca errores. 
+
+Las técnicas más comunes para versionar APIS son:
+1. Versionado a través de la **URL**. Es la usada en este ejemplo y la más común de las técnicas.
+2. Versionado a través del **header**.
+3. Versionado a través de los **query parameters**.
+
+## Configuración del versionado
+
+**Nota:** en este ejemplo solo se ha realizado en el controlador `UsersController.cs`. Realmente se debería hacer en todos los controladores y endpoints.
+
+**Capa CleanArchitecture.Api:**
+
+- `ApiSupportedVersions.cs`: clase que contiene todas las versiones soportadas (para no "hardcodear" los datos).
+- `ConfigureSwaggerOptions.cs`: Configura las opciones de Swagger para versionado de la API.
+- `UsersController.cs`: se ha añadido las versiones soportadas en cada endpoint.
+
+## Utilización de Swagger para diferentes versiones
+
+Por defecto si se utiliza versionado, y aunque los endpoints funcionan, en **Swagger** se produce un error:
+![My Image](./docs/imgs/12_Versionado_1.PNG)
+
+Se deberá configurar la clase `program.cs` de `CleanArchitecture.Api` para incluir las configuraciones especiales:
+
+```csharp
+builder
+    .Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1);
+        options.ReportApiVersions = true; //Añade en el header el número de versión
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    })
+    .AddMvc()
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+    });
+
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.ToString());
+});
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            var url = $"/swagger/{description.GroupName}/swagger.json";
+            var name = description.GroupName.ToUpperInvariant();
+            options.SwaggerEndpoint(url, name);
+        }
+    });
+}
+
+```
+
+Una vez realizada la configuración, ya aparecerán todas las versiones soportadas y su descripción:
+
+![My Image](./docs/imgs/12_Versionado_3.PNG)
+
+### ¿Cómo probar el versionado?
+
+Los ejemplos se encuentran en la colección de Postman `CleanArchitecture.postman_collection.json`.
+
+![My Image](./docs/imgs/12_Versionado_2.PNG)

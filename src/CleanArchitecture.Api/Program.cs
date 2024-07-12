@@ -1,5 +1,7 @@
+using Asp.Versioning;
 using CleanArchitecture.Api.Extensions;
 using CleanArchitecture.Api.OptionsSetup;
+using CleanArchitecture.Api.Versioning;
 using CleanArchitecture.Application;
 using CleanArchitecture.Application.Abstractions.Authentication;
 using CleanArchitecture.Infrastructure;
@@ -30,8 +32,28 @@ builder.Services.AddSingleton<
     PermissionAuthorizationPolicyProvider
 >();
 
+//Configuración del versionado de la API
+builder
+    .Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1);
+        options.ReportApiVersions = true; //Añade en el header el número de versión
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    })
+    .AddMvc()
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+    });
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.ToString());
+});
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -41,7 +63,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            var url = $"/swagger/{description.GroupName}/swagger.json";
+            var name = description.GroupName.ToUpperInvariant();
+            options.SwaggerEndpoint(url, name);
+        }
+    });
 }
 
 //Aplica las migraciones, comentar si no se quiere ejecutar (excluyente de SeedData..., primero lanzar ApplyMigration y luego la inserción de datos):
