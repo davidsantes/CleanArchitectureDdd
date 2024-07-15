@@ -8,12 +8,9 @@ public class PrecioService
     public PrecioDetalle CalcularPrecio(Vehiculo vehiculo, DateRange periodo)
     {
         var tipoMoneda = vehiculo.Precio!.TipoMoneda;
-        //var precioTotal = Moneda.Zero();
 
         //Cálculo del precio base
-        var precioPorPeriodo = new Moneda(
-            periodo.CantidadDias * vehiculo.Precio.Monto,
-            tipoMoneda);
+        var precioPorPeriodo = new Moneda(periodo.CantidadDias * vehiculo.Precio.Monto, tipoMoneda);
         var precioTotal = precioPorPeriodo;
 
         //Cálculo del precio por accesorios solicitados por el usuario
@@ -33,10 +30,7 @@ public class PrecioService
 
         if (porcentageCharge > 0)
         {
-            accesorioCharges = new Moneda(
-                precioPorPeriodo.Monto * porcentageCharge,
-                tipoMoneda
-            );
+            accesorioCharges = new Moneda(precioPorPeriodo.Monto * porcentageCharge, tipoMoneda);
         }
 
         precioTotal += accesorioCharges;
@@ -52,6 +46,6 @@ public class PrecioService
             vehiculo.Mantenimiento,
             accesorioCharges,
             precioTotal
-            );
+        );
     }
 }

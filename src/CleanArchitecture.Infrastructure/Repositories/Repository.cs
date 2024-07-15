@@ -25,7 +25,10 @@ internal abstract class Repository<TEntity, TEntityId>
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public void Add(TEntity entity)
+    /// <summary>
+    /// Al ser virtual, se puede sobreescribir en una clase derivada (en este ejemplo, en User.cs)
+    /// </summary>
+    public virtual void Add(TEntity entity)
     {
         DbContext.Add(entity);
     }

@@ -6,6 +6,8 @@ namespace CleanArchitecture.Domain.Users;
 
 public sealed class User : Entity<UserId>
 {
+    private readonly List<Role> _roles = new();
+
     /// <summary>
     /// Constructor necesario para que EF funcione.
     /// </summary>
@@ -40,8 +42,9 @@ public sealed class User : Entity<UserId>
     {
         var user = new User(UserId.New(), nombre, apellido, email, passwordHash);
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id!));
+        user._roles.Add(Role.Cliente);
         return user;
     }
 
-    public ICollection<Role>? Roles { get; set; }
+    public IReadOnlyCollection<Role>? Roles => _roles.ToList();
 }

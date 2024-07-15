@@ -14,7 +14,8 @@ Para poder realizarlo, es necesario tener claro el curso anterior: **Clean Archi
 6. **[SECCIÓN 08. Serilog en clean architecture y Net](#Seccion_08_Serilog)**
 7. **[SECCIÓN 09. Paginación en Clean Architecture](#Seccion_09_Paginacion)**
 8. **[SECCIÓN 12. Versionado en Apis](#Seccion_12_Versionado)**
- 
+9. **[SECCIÓN 15. Unit test en Clean architecture](#Seccion_15_Testing_Clean_Architecture)**
+
 ---
 
 ## Agradecimientos 🎁
@@ -367,3 +368,24 @@ Una vez realizada la configuración, ya aparecerán todas las versiones soportad
 Los ejemplos se encuentran en la colección de Postman `CleanArchitecture.postman_collection.json`.
 
 ![My Image](./docs/imgs/12_Versionado_2.PNG)
+
+# SECCIÓN 15. Unit test en Clean architecture <a name="Seccion_15_Testing_Clean_Architecture"></a>
+
+Recomendación de tipos de testing en un proyecto:
+
+![My Image](./docs/imgs/15.Testing_1.PNG)
+
+Se crearán los siguientes proyectos de test:
+- `CleanArchitecture.Domain.UnitTests`
+- `CleanArchitecture.Application.UnitTests`
+- `CleanArchitecture.ArchitectureTests`
+
+Todos ellos, tendrán los siguientes paquetes Nuget:
+1. `FluentAssertions`: Proporciona una sintaxis fluida para escribir aserciones en pruebas unitarias, haciendo que el código de prueba sea más legible y expresivo.
+2. `Microsoft.NET.Test.Sdk`: Es el paquete principal que contiene el soporte para ejecutar pruebas en .NET, gestionando el ciclo de vida de las pruebas y proporcionando las herramientas básicas para la ejecución de pruebas.
+3. `xunit`: Es un marco de pruebas para .NET que permite escribir y ejecutar pruebas unitarias, con soporte para pruebas basadas en atributos y extensibilidad a través de extensiones.
+4. `xunit.runner.visualstudio`: Proporciona la integración necesaria para que el test runner de xUnit se ejecute dentro del entorno de desarrollo de Visual Studio, permitiendo ejecutar pruebas y ver resultados en el Test Explorer de Visual Studio.
+
+Por otro lado, habrá proyectos que utilicen:
+1. `NSubstitute`: librería de mocking. Similar a `Moq`.
+2. `NetArchTest.Rules`: para testing de arquitectura (cumplimiento de reglas técnicas).
