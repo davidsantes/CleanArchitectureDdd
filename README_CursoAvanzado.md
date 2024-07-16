@@ -15,6 +15,7 @@ Para poder realizarlo, es necesario tener claro el curso anterior: **Clean Archi
 7. **[SECCIÓN 09. Paginación en Clean Architecture](#Seccion_09_Paginacion)**
 8. **[SECCIÓN 12. Versionado en Apis](#Seccion_12_Versionado)**
 9. **[SECCIÓN 15. Unit test en Clean architecture](#Seccion_15_Testing_Clean_Architecture)**
+10. **[SECCIÓN 21. Reportes con Quest Pdf](#Seccion_21_Reportes)**
 
 ---
 
@@ -389,3 +390,39 @@ Todos ellos, tendrán los siguientes paquetes Nuget:
 Por otro lado, habrá proyectos que utilicen:
 1. `NSubstitute`: librería de mocking. Similar a `Moq`.
 2. `NetArchTest.Rules`: para testing de arquitectura (cumplimiento de reglas técnicas).
+
+# SECCIÓN 21. Reportes con Quest Pdf <a name="Seccion_21_Reportes"></a>
+
+**Quest PDF** es una librería .Net para trabajar con archivos PDF, de tipo open source. Para más información visitar [QuestPDF](https://www.questpdf.com/).
+
+**Nota:** es necesario revisar si la licencia es compatible con un uso empresarial.
+
+El ejemplo generará un informe de vehículos, filtrado por modelo en el caso de que se informe.
+
+![My Image](./docs/imgs/21_Reporte_1.PNG)
+
+## Código implementado:
+
+* Proyecto `CleanArchitecture.Api`:
+    * Clase `AlquileresController.cs`: inclusión de una acción para el reporte llamada `ReporteVehiculos`:
+    * Clase `program.cs`: este proceso quedará grabado en el código, en el `program.cs` del proyecto `CleanArchitecture.Api`:
+
+```csharp
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+```
+
+* Proyecto `CleanArchitecture.Application`:
+    * Clase `ReportVehiculoPdfQuery.cs`: Declaración de una consulta inmutable (record) para generar un reporte PDF de vehículos.
+    * Clase `ReportVehiculoPdfQueryHandler.cs`: Clase que maneja la generación del PDF para el reporte de vehículos.
+
+### ¿Cómo probar el reporte?
+
+Los ejemplos se encuentran en la colección de Postman `CleanArchitecture.postman_collection.json`.
+
+![My Image](./docs/imgs/21_Reporte_2.PNG)
+
+**Nota:** desde Swagger no es posible probar, si se quiere probar directamente desde el navegador, habrá que introducir en el navegador directamente la URL, por ejemplo: 
+
+`
+http://localhost:9000/api/v1/vehiculos/reporte
+`

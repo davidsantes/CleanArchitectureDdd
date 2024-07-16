@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using CleanArchitecture.Api.Versioning;
 using CleanArchitecture.Application.Alquileres.GetAlquiler;
 using CleanArchitecture.Application.Alquileres.ReservarAlquiler;
 using MediatR;
@@ -6,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace CleanArchitecture.Api.Controllers.Alquileres;
 
 [ApiController]
-[Route("api/alquileres")]
+[Route("api/v{version:apiVersion}/alquileres")]
+[ApiVersion(ApiSupportedVersions.V1)]
 public class AlquileresController : ControllerBase
 {
     private readonly ISender _sender;
@@ -17,10 +20,8 @@ public class AlquileresController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetAlquiler(
-        Guid id,
-        CancellationToken cancellationToken
-    )
+    [MapToApiVersion(ApiSupportedVersions.V1)]
+    public async Task<IActionResult> GetAlquiler(Guid id, CancellationToken cancellationToken)
     {
         var query = new GetAlquilerQuery(id);
         var resultado = await _sender.Send(query, cancellationToken);
@@ -29,14 +30,14 @@ public class AlquileresController : ControllerBase
     }
 
     [HttpPost]
+    [MapToApiVersion(ApiSupportedVersions.V1)]
     public async Task<IActionResult> ReservaAlquiler(
         Guid id,
         AlquilerReservaRequest request,
         CancellationToken cancellationToken
     )
     {
-        var command = new ReservarAlquilerCommand
-        (
+        var command = new ReservarAlquilerCommand(
             request.VehiculoId,
             request.UserId,
             request.StartDate,

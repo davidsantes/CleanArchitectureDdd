@@ -18,6 +18,9 @@ builder.Host.UseSerilog(
 
 builder.Services.AddControllers();
 
+//Configuración de Quest PDF
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 //Configuración de la autenticación
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
