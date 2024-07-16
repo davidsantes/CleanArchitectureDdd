@@ -10,7 +10,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E9AA2E5-7F15-4778-B0DB-8A9B1176903C}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
-		README_CursoAvanzado.md = README_CursoAvanzado.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CleanArchitecture.Application", "src\CleanArchitecture.Application\CleanArchitecture.Application.csproj", "{5727EBF7-3ECF-4727-89A8-7B3D3A548890}"
